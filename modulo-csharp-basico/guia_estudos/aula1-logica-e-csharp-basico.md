@@ -45,9 +45,9 @@ A diferença fundamental entre categorias de tipos:
 *   **Tipos de referência** (`string`, arrays, `List<T>`, objetos): a variável guarda um "endereço" para o dado. Ao copiar, as duas variáveis passam a apontar para o **mesmo** dado.
 
 ```csharp
-int a = 10;
-int b = a;      // copia o VALOR
-b = 20;         // a continua 10
+int original = 10;
+int copia = original;   // copia o VALOR
+copia = 20;             // original continua 10
 
 int[] fila1 = { 1, 2, 3 };
 int[] fila2 = fila1;    // copia a REFERENCIA (mesmo array!)
@@ -100,7 +100,13 @@ else
 decimal tarifa = 8.5m;
 Console.WriteLine(tarifa.ToString("C"));    // R$ 8,50 (moeda)
 Console.WriteLine(distanciaKm.ToString("N2")); // 3,75 (2 casas)
+
+// Mesma formatacao direto na interpolacao (o specifier vai depois dos dois-pontos)
+Console.WriteLine($"{tarifa:C}");           // R$ 8,50  -> igual ao ToString("C")
+Console.WriteLine($"{distanciaKm:N2}");     // 3,75     -> igual ao ToString("N2")
 ```
+
+> **As duas formas são equivalentes.** `valor.ToString("C")` e `$"{valor:C}"` produzem o mesmo texto — use `ToString(...)` quando precisar guardar o texto em uma variável e a interpolação `{valor:C}` quando o valor já faz parte de uma mensagem. As duas aparecem ao longo do material. Atenção: `C` e `N2` seguem a **cultura da máquina** — a saída `R$` só é garantida em um computador configurado em português do Brasil (ou informando a cultura explicitamente).
 
 ### 1.5. Estruturas Condicionais
 
@@ -153,6 +159,8 @@ decimal percentualDesconto = plano switch
     _ => 0m
 };
 ```
+
+> **Onde declarar o `enum` em um arquivo monolítico.** Quando o programa usa *top-level statements* (um `Program.cs` sem `class`/`Main` explícitos, como neste módulo), o `enum` — por ser uma **declaração de tipo** — deve ficar **ao final do arquivo**, depois de todas as instruções. Se ele for colocado antes das instruções, o programa completo **não compila** (erro `CS8803`: *top-level statements must precede namespace and type declarations*). O trecho isolado acima mostra o `enum` no início apenas para apresentar sua sintaxe — não é um programa completo. Nos exemplos que **são** programas inteiros — o **Caso A** e a "Estrutura para Desenvolvimento" do **Desafio** desta aula — o `enum TipoPlano` aparece corretamente no fim do arquivo.
 
 ### 1.6. Estruturas de Repetição
 
@@ -231,13 +239,6 @@ codigo.Trim();                  // remove espacos das pontas
 A PedalUrbano cobra R$ 3,00 de desbloqueio mais um valor por faixa de tempo, com desconto conforme o plano do cliente. Veja o cálculo completo:
 
 ```csharp
-enum TipoPlano
-{
-    Avulso,
-    Mensalista,
-    Turista
-}
-
 decimal CalcularTarifa(int minutos, TipoPlano plano)
 {
     const decimal taxaDesbloqueio = 3.00m;
@@ -267,6 +268,14 @@ decimal CalcularTarifa(int minutos, TipoPlano plano)
 
 decimal tarifa = CalcularTarifa(75, TipoPlano.Mensalista);
 Console.WriteLine($"Tarifa da corrida: {tarifa.ToString("C")}");
+
+// O enum fica ao FINAL do arquivo: as instrucoes top-level vem antes das declaracoes de tipo (secao 1.5)
+enum TipoPlano
+{
+    Avulso,
+    Mensalista,
+    Turista
+}
 ```
 
 **Vantagem desse padrão:** as regras de negócio ficam legíveis como uma tabela de faixas, e o uso de `decimal` garante que valores monetários não sofram erros de arredondamento.

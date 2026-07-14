@@ -115,9 +115,7 @@ foreach (TipoOcorrencia tipo in Enum.GetValues(typeof(TipoOcorrencia)))
 
 ```csharp
 Console.Write("Escolha uma opcao: ");
-string entrada = Console.ReadLine() ?? "";
-
-if (int.TryParse(entrada, out int opcao) && Enum.IsDefined(typeof(TipoOcorrencia), opcao))
+if (int.TryParse(Console.ReadLine(), out int opcao) && Enum.IsDefined(typeof(TipoOcorrencia), opcao))
 {
     TipoOcorrencia escolha = (TipoOcorrencia)opcao;    // int -> enum
     Console.WriteLine($"Voce escolheu: {escolha}");
@@ -127,6 +125,15 @@ else
 ```
 
 Com a escolha validada, a decisão final é um `switch` — exatamente como na Aula 1.
+
+> **Em um menu de verdade, envolva a leitura em um `while`.** O exemplo acima valida a opção **uma vez** (com `if`) para focar no `Enum.IsDefined`. Num menu real — e no Desafio desta aula — a leitura fica dentro de um laço que **repete a pergunta até vir uma opção válida**, exatamente como o padrão `while` + `TryParse` da Aula 2 (seção 1.4):
+>
+> ```csharp
+> int opcao;
+> while (!int.TryParse(Console.ReadLine(), out opcao) || !Enum.IsDefined(typeof(TipoOcorrencia), opcao))
+>     Console.WriteLine("Opcao inexistente. Tente novamente:");
+> TipoOcorrencia escolha = (TipoOcorrencia)opcao;
+> ```
 
 ---
 
@@ -187,14 +194,6 @@ Console.WriteLine($"Beneficios: {beneficios}");
 No caixa das lojas parceiras, a recarga passa por três etapas de cálculo: cupom, forma de pagamento e parcelamento. Repare como cada etapa parte do **valor já processado** pela anterior:
 
 ```csharp
-enum FormaPagamento
-{
-    Dinheiro = 1,
-    Pix = 2,
-    Debito = 3,
-    Credito = 4
-}
-
 decimal valorRecarga = 200.00m;
 bool possuiCupom = true;
 FormaPagamento pagamento = FormaPagamento.Credito;
@@ -233,6 +232,15 @@ if (pagamento == FormaPagamento.Credito)
 }
 else
     Console.WriteLine("Tipo de Pagamento: A vista");
+
+enum FormaPagamento
+{
+    Dinheiro = 1,
+    Pix = 2,
+    Debito = 3,
+    Credito = 4
+}
+
 ```
 
 **Vantagem desse padrão:** cada etapa tem sua variável (`valorAposCupom`, `valorFinal`) — os valores intermediários que o relatório exige já existem prontos, e um percentual negativo no `switch` expressa desconto e taxa com a mesma regra.

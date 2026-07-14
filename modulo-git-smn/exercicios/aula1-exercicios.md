@@ -26,7 +26,7 @@ Nesta lista de exercícios, você praticará o ciclo básico do Git, o trabalho 
 Você recebeu sua primeira tarefa da sprint: iniciar o "cadastro de cliente" do AgendaFácil. O trabalho deve ser feito em uma branch de feature, como manda o fluxo do time — e, no meio do caminho, você enfrentará seu primeiro conflito de merge.
 
 ### Requisitos:
-1. Em um novo repositório (ou no do exercício 1), garanta que está na `main` e crie a branch `feature/cadastro-cliente` com `git checkout -b`.
+1. Em um novo repositório (ou no do exercício 1), garanta que está na `main` e crie a branch `feat/cadastro-cliente` com `git checkout -b`.
 2. Na feature, crie o arquivo `cadastro.md` com uma linha descrevendo a funcionalidade e faça um commit. Depois, adicione mais uma linha e faça um segundo commit.
 3. Alterne entre `main` e a feature com `git switch` (ou `git checkout`) e observe o arquivo `cadastro.md` aparecer e sumir do working directory. Explique por que isso acontece.
 4. Provoque um conflito controlado: na `main`, crie um commit alterando a **primeira linha** de um arquivo que também exista na feature (crie o arquivo nas duas branches, com conteúdos diferentes na mesma linha); em seguida, faça o merge da feature na `main`.
@@ -41,7 +41,7 @@ Você recebeu sua primeira tarefa da sprint: iniciar o "cadastro de cliente" do 
 Sua feature foi aprovada pelo time e agora precisa percorrer o caminho oficial até a produção, seguindo o manual do Gitflow SMN. Além de executar os comandos, você deverá demonstrar que entende as regras do fluxo.
 
 ### Requisitos:
-1. Monte um repositório com as branches `main` (com um commit inicial) e `staging`, e uma branch `feature/relatorio-consultas` criada a partir da `main` com pelo menos 1 commit.
+1. Monte um repositório com as branches `main` (com um commit inicial) e `staging`, e uma branch `feat/relatorio-consultas` criada a partir da `main` com pelo menos 1 commit.
 2. Integre a feature na `staging`, simulando o envio para homologação.
 3. Responda (em comentário no seu roteiro ou em um arquivo de respostas): por que o fluxo SMN **proíbe** o merge de `staging` para `main`?
 4. Simule o reset da `staging`: exclua a branch e recrie-a a partir da `main`, como o time faz quando o ambiente de homologação fica instável.
@@ -49,11 +49,11 @@ Sua feature foi aprovada pelo time e agora precisa percorrer o caminho oficial a
 6. Encontre os **2 erros** no roteiro abaixo, explique por que cada um viola o fluxo SMN e escreva a versão corrigida:
    ```bash
    git checkout staging
-   git checkout -b feature/notificacao-sms
+   git checkout -b feat/notificacao-sms
    git add .
-   git commit -m "Adiciona notificacao por SMS"
+   git commit -m "feat/notificacao-sms: Adiciona notificacao por SMS."
    git checkout staging
-   git merge feature/notificacao-sms
+   git merge feat/notificacao-sms
    # QA aprovou a funcionalidade
    git checkout main
    git merge staging

@@ -20,25 +20,23 @@ Console.WriteLine($"Codigo informado: {codigoBike}");
 Dois detalhes importantes:
 
 *   **`Console.Write` vs. `Console.WriteLine`**: use `Write` para a pergunta, assim o usuário digita na mesma linha.
-*   **`?? ""`**: se a leitura vier vazia (nula), usamos o texto vazio no lugar. Isso evita o aviso do compilador e garante que a variável sempre tenha um texto válido.
+*   **`?? ""`**: `Console.ReadLine()` pode devolver `null` (por exemplo, no fim da entrada). O `?? ""` troca esse `null` por texto vazio, garantindo um `string` válido para **guardar, comparar ou normalizar** com `Trim`/`ToUpper`. **Use o `?? ""` apenas quando for realmente manipular o texto.** Quando o objetivo é só **converter** o valor, passe `Console.ReadLine()` direto para o `TryParse` (próxima seção): o próprio `TryParse` trata o `null` como conversão inválida, então o `?? ""` ali seria desnecessário.
 
 ### 1.2. Convertendo Entradas: TryParse para int, decimal e bool
 
 Como `ReadLine` sempre devolve texto, todo número ou booleano precisa ser **convertido**. Na Aula 1 usamos `int.TryParse`; a mesma família de métodos existe para os outros tipos:
 
 ```csharp
-// int: quantidades, idades, contagens
+// int: quantidades, idades, contagens (leia direto no TryParse: nada de ?? "")
 Console.Write("Minutos de corrida: ");
-string entradaMinutos = Console.ReadLine() ?? "";
-if (int.TryParse(entradaMinutos, out int minutos))
+if (int.TryParse(Console.ReadLine(), out int minutos))
     Console.WriteLine($"Corrida de {minutos} minutos.");
 else
     Console.WriteLine("Valor invalido: digite apenas numeros inteiros.");
 
 // decimal: dinheiro (o usuario digita com VIRGULA, ex.: 12,50)
 Console.Write("Valor da recarga: ");
-string entradaValor = Console.ReadLine() ?? "";
-if (decimal.TryParse(entradaValor, out decimal valorRecarga))
+if (decimal.TryParse(Console.ReadLine(), out decimal valorRecarga))
     Console.WriteLine($"Recarga de {valorRecarga.ToString("C")}.");
 else
     Console.WriteLine("Valor invalido: use numeros e virgula, ex.: 12,50.");
@@ -52,6 +50,8 @@ if (bool.TryParse(cupomTexto, out bool possuiCupom))
 > **Atenção com o `bool.TryParse`:** ele só reconhece os textos `"true"` e `"false"` (em qualquer combinação de maiúsculas/minúsculas). Textos como `"1"`, `"sim"` ou `"verdadeiro"` **falham** na conversão.
 
 O padrão profissional é sempre o mesmo: **tentou converter, verificou o resultado, tratou o erro com mensagem amigável** — o programa nunca deve quebrar por causa de uma entrada errada.
+
+> **Estes exemplos com `if` são o primeiro passo.** Aqui a conversão é testada **uma vez** e, se falhar, apenas avisamos o erro. Na prática — e nas provas — quase sempre queremos **repetir a pergunta até o usuário digitar um valor válido**: isso troca o `if` por um `while`, mostrado na seção **1.4** logo abaixo. Guarde o padrão `while` + `TryParse`: é ele que aparece nos Casos A/B desta aula e nas questões interativas.
 
 ### 1.3. Ponto ou Vírgula? Convertendo Textos com Ponto Decimal
 
@@ -92,9 +92,7 @@ bool valorValido = false;
 while (!valorValido)
 {
     Console.Write("Valor da recarga (minimo R$ 5,00): ");
-    string entrada = Console.ReadLine() ?? "";
-
-    if (decimal.TryParse(entrada, out valorRecarga) && valorRecarga >= 5m)
+    if (decimal.TryParse(Console.ReadLine(), out valorRecarga) && valorRecarga >= 5m)
         valorValido = true;
     else
         Console.WriteLine("Entrada invalida: digite um numero maior ou igual a 5,00.");
@@ -147,9 +145,7 @@ bool minutosValidos = false;
 while (!minutosValidos)
 {
     Console.Write("Minutos previstos de uso: ");
-    string entrada = Console.ReadLine() ?? "";
-
-    if (int.TryParse(entrada, out minutosPrevistos) && minutosPrevistos > 0)
+    if (int.TryParse(Console.ReadLine(), out minutosPrevistos) && minutosPrevistos > 0)
         minutosValidos = true;
     else
         Console.WriteLine("Digite um numero inteiro maior que zero.");
@@ -161,9 +157,7 @@ bool saldoValido = false;
 while (!saldoValido)
 {
     Console.Write("Saldo atual (ex.: 25,90): ");
-    string entrada = Console.ReadLine() ?? "";
-
-    if (decimal.TryParse(entrada, out saldo) && saldo >= 0m)
+    if (decimal.TryParse(Console.ReadLine(), out saldo) && saldo >= 0m)
         saldoValido = true;
     else
         Console.WriteLine("Digite um valor valido, com virgula para os centavos.");

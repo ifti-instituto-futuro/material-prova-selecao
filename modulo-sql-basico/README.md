@@ -4,7 +4,7 @@ Bem-vindo ao repositório do **Módulo de SQL Básico**.
 
 Este material foi elaborado para introduzir a criação, manipulação e consulta de dados no **Microsoft SQL Server**. Todo o conteúdo prático é baseado no cenário da **CineVista**, uma rede de cinemas fictícia, aproximando a teoria dos desafios reais de quem trabalha com dados no dia a dia.
 
-**Escopo do módulo:** DDL, DML, consultas (`SELECT`), funções de agregação, JOINs e subqueries. Modelagem de dados (ER/normalização) e índices **não** fazem parte deste módulo — o diagrama do guia de estudos serve apenas como mapa de leitura do banco pronto.
+**Escopo do módulo:** DDL, DML, consultas (`SELECT`), funções de agregação e JOINs. Subqueries, modelagem de dados (ER/normalização) e índices **não** fazem parte deste módulo — subqueries ficam para o módulo de SQL Programação, e o diagrama do guia de estudos serve apenas como mapa de leitura do banco pronto.
 
 ## Estrutura do Curso
 
@@ -16,7 +16,7 @@ O conteúdo está organizado em uma aula única, com guia teórico, estudo de ca
    - DML: `INSERT`, `UPDATE` e `DELETE`.
    - `SELECT` com `WHERE`, `ORDER BY`, `DISTINCT`, `TOP`, `LIKE`, `BETWEEN` e `IN`.
    - Funções de agregação (`COUNT`, `SUM`, `AVG`, `MIN`, `MAX`), `GROUP BY` e `HAVING`.
-   - JOINs (`INNER`, `LEFT`, `RIGHT`) e subqueries.
+   - JOINs (`INNER`, `LEFT`, `RIGHT`).
 
 ## Padrões de Código (Guidelines)
 

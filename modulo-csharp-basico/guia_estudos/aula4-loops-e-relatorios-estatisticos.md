@@ -19,9 +19,7 @@ for (int i = 0; i < temperaturas.Length; i++)
     while (!valida)
     {
         Console.Write($"Temperatura do dia {i + 1}: ");
-        string entrada = Console.ReadLine() ?? "";
-
-        if (double.TryParse(entrada, out temperaturas[i]))
+        if (double.TryParse(Console.ReadLine(), out temperaturas[i]))
             valida = true;
         else
             Console.WriteLine("Digite um numero valido.");
@@ -33,7 +31,7 @@ Quando a **quantidade** de valores também vem do usuário, leia-a primeiro e us
 
 ```csharp
 Console.Write("Quantas vendas deseja registrar? ");
-int quantidade = int.Parse(Console.ReadLine() ?? "0");   // em programa real, valide com TryParse
+int.TryParse(Console.ReadLine(), out int quantidade);   // simplificado; num programa real, valide em loop como acima
 
 decimal[] vendas = new decimal[quantidade];   // o tamanho vem da resposta do usuario
 ```
@@ -104,14 +102,14 @@ decimal mediaCerta = (decimal)somaMinutos / minutos.Length;  // 35,666...
 ```csharp
 // 1a passada: total e media (secoes 1.2 e 1.4)
 double soma = 0;
-foreach (double t in temperaturas)
-    soma += t;
+foreach (double temperatura in temperaturas)
+    soma += temperatura;
 double media = soma / temperaturas.Length;
 
 // 2a passada: agora da para comparar com a media
 int diasAcimaDaMedia = 0;
-foreach (double t in temperaturas)
-    if (t > media)
+foreach (double temperatura in temperaturas)
+    if (temperatura > media)
         diasAcimaDaMedia++;
 ```
 
@@ -207,9 +205,7 @@ for (int i = 0; i < kmPorDia.Length; i++)
     while (!valida)
     {
         Console.Write($"Km do dia {i + 1}: ");
-        string entrada = Console.ReadLine() ?? "";
-
-        if (double.TryParse(entrada, out kmPorDia[i]) && kmPorDia[i] >= 0)
+        if (double.TryParse(Console.ReadLine(), out kmPorDia[i]) && kmPorDia[i] >= 0)
             valida = true;
         else
             Console.WriteLine("Digite um numero maior ou igual a zero.");

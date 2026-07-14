@@ -26,11 +26,20 @@ Use `git status` o tempo todo — ele é a bússola de quem está aprendendo.
 
 ### 1.2. O Ciclo Básico: add, commit e histórico
 
+Antes do **primeiro commit**, configure sua identidade — o nome e o e-mail que assinarão todos os seus commits. É uma configuração feita **uma única vez** por máquina (a flag `--global` vale para todos os seus repositórios):
+
+```bash
+git config --global user.name "Seu Nome"
+git config --global user.email "seu.email@empresa.com"
+```
+
+Com a identidade configurada, o ciclo do dia a dia é preparar (`add`) e registrar (`commit`):
+
 ```bash
 git add Agenda.cs           # prepara um arquivo especifico
 git add .                   # prepara todas as alteracoes da pasta
 
-git commit -m "Adiciona validacao de horario na agenda"
+git commit -m "feature/nome-da-funcionalidade: Adiciona validacao de horario na agenda"
 
 git log                     # historico completo
 git log --oneline           # historico resumido (1 linha por commit)
@@ -56,11 +65,13 @@ Diferença importante: `git pull` = `git fetch` + merge automático. O `fetch` �
 Uma **branch** é uma linha de desenvolvimento independente. Ela permite trabalhar em uma funcionalidade sem afetar o código principal.
 
 ```bash
-git branch                          # lista as branches locais
-git checkout -b feature/nova-tela   # cria uma branch e ja muda para ela
-git switch main                     # alterna para outra branch existente
-git merge feature/nova-tela         # integra a branch indicada na branch atual
+git branch                           # lista as branches locais
+git checkout -b feature/nova-tela    # cria uma branch e ja muda para ela
+git switch main ou git checkout main # alterna para outra branch existente
+git merge feature/nova-tela          # integra a branch indicada na branch atual
 ```
+
+> **Convenção de nomes de branch.** Use sempre **letras minúsculas** e **kebab-case** (palavras separadas por hífen), sem espaços nem acentos: `feature/cadastro-de-clientes`, e nunca `Feature/Cadastro Clientes` ou `nova branch`. Neste material adotamos o prefixo `feature/`, que é o mais comum no mercado. **Na prática da SMN, porém, a convenção é `feat/`** (ex.: `feat/cadastro-de-clientes`) — ao trabalhar nos repositórios da empresa, troque `feature/` por `feat/`. O essencial é o time inteiro seguir **um** padrão de forma consistente.
 
 Sobre o `merge`:
 
@@ -135,17 +146,17 @@ git checkout main
 git pull
 
 # 2. Cria a branch da tarefa com nome descritivo
-git checkout -b feature/lembrete-email
+git checkout -b feat/lembrete-email
 
 # 3. Desenvolve em pequenos commits
 git add ServicoEmail.cs
-git commit -m "Adiciona servico de envio de e-mail"
+git commit -m "feat/lembrete-email: Adiciona servico de envio de e-mail."
 
 git add AgendadorLembretes.cs
-git commit -m "Agenda lembrete 24h antes da consulta"
+git commit -m "feat/lembrete-email: Agenda lembrete 24h antes da consulta."
 
 # 4. Publica a branch no repositorio remoto
-git push origin feature/lembrete-email
+git push origin feat/lembrete-email
 ```
 
 **Vantagem desse padrão:** partir sempre da `main` atualizada minimiza conflitos futuros e garante que a feature nasce de uma base íntegra e estável.
@@ -154,27 +165,27 @@ git push origin feature/lembrete-email
 
 ### Caso B: Homologação, reprovação de QA e promoção a produção
 
-A feature `feature/lembrete-email` foi para homologação e o QA encontrou um problema: o lembrete era enviado duas vezes.
+A feature `feat/lembrete-email` foi para homologação e o QA encontrou um problema: o lembrete era enviado duas vezes.
 
 ```bash
 # 1. Integra a feature na staging (dispara deploy de homologacao)
 git checkout staging
-git merge feature/lembrete-email
+git merge feat/lembrete-email
 
 # 2. QA reprova. A correcao e feita NA FEATURE, nunca na staging
-git checkout feature/lembrete-email
+git checkout feat/lembrete-email
 git add AgendadorLembretes.cs
-git commit -m "Corrige envio duplicado do lembrete"
+git commit -m "feat/lembrete-email: Corrige envio duplicado do lembrete."
 
 # 3. Reintegra a correcao na staging para novo teste
 git checkout staging
-git merge feature/lembrete-email
+git merge feat/lembrete-email
 
 # 4. QA aprova. Abre-se o Pull Request feature -> main.
 #    Apos o code review e o merge do PR, a producao e atualizada
 #    e a branch da feature e excluida:
-git branch -d feature/lembrete-email
-git push origin --delete feature/lembrete-email
+git branch -d feat/lembrete-email
+git push origin --delete feat/lembrete-email
 ```
 
 **Vantagem desse padrão:** a `staging` funciona como barreira de segurança — a produção só recebe código que passou pela homologação e pelo code review, e a correção na própria feature mantém a história limpa e rastreável.
@@ -188,11 +199,11 @@ Simule localmente uma sprint completa do AgendaFácil, exercitando o ciclo Devel
 ### Requisitos:
 1.  Crie uma pasta `agendafacil`, inicialize um repositório Git nela e faça o commit inicial na `main` com um arquivo `README.md` do projeto.
 2.  Crie a branch `staging` a partir da `main`.
-3.  Volte à `main` e crie a branch `feature/tela-login`. Faça **2 commits** nela (por exemplo, criando os arquivos `login.html` e `validacao.js`).
-4.  Integre a `feature/tela-login` na `staging` (simulando o deploy de homologação).
-5.  Simule uma reprovação de QA: faça um **3º commit de correção na feature** e integre novamente na `staging`.
-6.  Simule a aprovação do PR: integre a `feature/tela-login` na `main` (em um repositório real, este passo seria o merge do Pull Request).
-7.  Exclua a branch `feature/tela-login` e confira a árvore de commits com `git log --oneline --graph --all`.
+3.  Volte à `main` e crie a branch `feat/tela-login`. Faça **2 commits** nela (por exemplo, criando os arquivos `login.html` e `validacao.js`).
+4.  Integre a `feat/tela-login` na `staging` (simulando o deploy de homologação).
+5.  Simule uma reprovação de QA: faça um **3º commit de correção na feat** e integre novamente na `staging`.
+6.  Simule a aprovação do PR: integre a `feat/tela-login` na `main` (em um repositório real, este passo seria o merge do Pull Request).
+7.  Exclua a branch `feat/tela-login` e confira a árvore de commits com `git log --oneline --graph --all`.
 
 ### Estrutura para Desenvolvimento:
 ```bash
@@ -202,7 +213,7 @@ git init
 
 echo "# AgendaFacil" > README.md
 git add .
-git commit -m "Commit inicial do projeto"
+git commit -m "docs: Commit inicial do projeto"
 
 # Continue a partir daqui!
 ```

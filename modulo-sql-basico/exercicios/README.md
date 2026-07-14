@@ -2,7 +2,7 @@
 
 Bem-vindo aos exercícios práticos do módulo de SQL Básico.
 
-Este guia consolida o conteúdo estudado na aula única do módulo, utilizando o banco de dados `cinevista`, cujos scripts de criação e população estão em [../guia_estudos/database](../guia_estudos/database). O foco é aplicar DDL, DML, consultas, agregações, JOINs e subqueries em problemas reais de uma rede de cinemas.
+Este guia consolida o conteúdo estudado na aula única do módulo, utilizando o banco de dados `cinevista`, cujos scripts de criação e população estão em [../guia_estudos/database](../guia_estudos/database). O foco é aplicar DDL, DML, consultas, agregações e JOINs em problemas reais de uma rede de cinemas.
 
 ---
 
@@ -13,7 +13,7 @@ A aula possui 3 exercícios organizados de forma incremental:
 *   **[Aula 1: SQL Básico — CineVista](aula1-exercicios.md)**
     *   Exercício 1: DDL e DML (criação de tabela com FK, ALTER TABLE, INSERT, UPDATE e DELETE).
     *   Exercício 2: consultas com filtros, TOP, agregações, GROUP BY e HAVING.
-    *   Exercício 3: JOINs de múltiplas tabelas e subqueries.
+    *   Exercício 3: JOINs de múltiplas tabelas (INNER e LEFT JOIN).
 
 ---
 

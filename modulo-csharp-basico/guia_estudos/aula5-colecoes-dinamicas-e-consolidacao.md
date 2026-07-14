@@ -42,8 +42,8 @@ bool temCampainha = pecas.Contains("Campainha");    // false
 
 // CONTAR POR CONDICAO: percorra a lista de quantidades (Aula 4)
 int estoqueBaixo = 0;
-foreach (int qtd in quantidades)
-    if (qtd < 10)
+foreach (int quantidade in quantidades)
+    if (quantidade < 10)
         estoqueBaixo++;
 
 // REMOVER: ache o indice UMA vez e use RemoveAt nas DUAS listas
@@ -102,14 +102,14 @@ else
 
 // FAIXA INCLUSIVA: entre 24 e 28, incluindo as pontas -> >= e <=
 int naFaixaIdeal = 0;
-foreach (double t in unicas)
-    if (t >= 24.0 && t <= 28.0)
+foreach (double temperatura in unicas)
+    if (temperatura >= 24.0 && temperatura <= 28.0)
         naFaixaIdeal++;
 
 // ALERTA: existe algum valor critico? Uma flag bool resolve
 bool temCritica = false;
-foreach (double t in unicas)
-    if (t > 30.0)
+foreach (double temperatura in unicas)
+    if (temperatura > 30.0)
         temCritica = true;
 Console.WriteLine($"Temperatura critica detectada: {(temCritica ? "Sim" : "Nao")}");
 ```
@@ -152,8 +152,8 @@ Console.WriteLine($"Peca \"Campainha\" existe? {(temCampainha ? "Sim" : "Nao")}"
 
 // 4) Contagem de estoque baixo (Aula 4: contador condicional)
 int estoqueBaixo = 0;
-foreach (int qtd in quantidades)
-    if (qtd < 10)
+foreach (int quantidade in quantidades)
+    if (quantidade < 10)
         estoqueBaixo++;
 Console.WriteLine($"Pecas com estoque baixo (< 10): {estoqueBaixo}");
 
@@ -198,9 +198,9 @@ todas.AddRange(grupoB);
 
 // 2) Remover duplicados na mao
 List<double> unicas = new List<double>();
-foreach (double t in todas)
-    if (!unicas.Contains(t))
-        unicas.Add(t);
+foreach (double temperatura in todas)
+    if (!unicas.Contains(temperatura))
+        unicas.Add(temperatura);
 
 // 3) Ordenar em ordem crescente
 unicas.Sort();
@@ -212,8 +212,8 @@ if (unicas.Count == 0)
     Console.WriteLine("Nenhuma temperatura valida para processar");
 else
 {
-    foreach (double t in unicas)
-        Console.WriteLine($"{t.ToString("N1")} C");
+    foreach (double temperatura in unicas)
+        Console.WriteLine($"{temperatura.ToString("N1")} C");
 
     Console.WriteLine();
     Console.WriteLine($"Temperaturas distintas: {unicas.Count}");
@@ -223,11 +223,11 @@ else
     // 5) Faixa ideal (inclusiva) e alerta critico
     int naFaixaIdeal = 0;
     bool temCritica = false;
-    foreach (double t in unicas)
+    foreach (double temperatura in unicas)
     {
-        if (t >= 24.0 && t <= 28.0)
+        if (temperatura >= 24.0 && temperatura <= 28.0)
             naFaixaIdeal++;
-        if (t > 30.0)
+        if (temperatura > 30.0)
             temCritica = true;
     }
 

@@ -13,9 +13,9 @@ Ao devolver uma bike, o cliente informa os dados da corrida no totem da estaçã
 
 ### Requisitos:
 1. Copie o esqueleto para o seu `Program.cs` e resolva um TODO por vez, executando `dotnet run` a cada passo.
-2. No TODO 1, leia o código da bike com `Console.ReadLine() ?? ""` e normalize com `Trim().ToUpper()`.
-3. No TODO 2, leia os minutos de uso e converta com `int.TryParse`. Se a conversão falhar, exiba `"Minutos invalidos."` e encerre com `return;`.
-4. No TODO 3, leia o valor por minuto (digitado com vírgula, ex.: `0,45`) e converta com `decimal.TryParse`. Se falhar, exiba `"Valor invalido."` e encerre.
+2. No TODO 1, leia o código da bike e normalize com `Trim().ToUpper()` — como o texto será manipulado, use `Console.ReadLine() ?? ""` para garantir que ele não seja nulo.
+3. No TODO 2, leia os minutos de uso passando `Console.ReadLine()` direto ao `int.TryParse` (numa conversão não é preciso o `?? ""`). Se a conversão falhar, exiba `"Minutos invalidos."` e encerre com `return;`.
+4. No TODO 3, leia o valor por minuto (digitado com vírgula, ex.: `0,45`) passando `Console.ReadLine()` direto ao `decimal.TryParse`. Se falhar, exiba `"Valor invalido."` e encerre.
 5. No TODO 4, calcule o custo da corrida (minutos × valor por minuto).
 6. No TODO 5, imprima a ficha em seção única `=== DEVOLUCAO ===` com: código da bike, minutos, valor por minuto e custo — os valores monetários com `ToString("C")`.
 
@@ -38,8 +38,8 @@ Console.WriteLine("=== TOTEM DE DEVOLUCAO ===");
 A central percebeu que muitos clientes erram a digitação na primeira tentativa. Em vez de encerrar o programa, o totem deve **insistir até receber um valor válido**.
 
 ### Requisitos:
-1. Leia o valor da recarga em um laço `while`: repita até a entrada converter para `decimal` **e** ser maior ou igual a R$ 5,00. A cada erro, mostre uma mensagem explicando o problema.
-2. Leia a quantidade de meses do plano em outro laço `while`: repita até converter para `int` **e** estar entre 1 e 24.
+1. Leia o valor da recarga em um laço `while`, passando `Console.ReadLine()` direto ao `decimal.TryParse`: repita até a entrada converter **e** ser maior ou igual a R$ 5,00. A cada erro, mostre uma mensagem explicando o problema.
+2. Leia a quantidade de meses do plano em outro laço `while` (também lendo direto no `int.TryParse`): repita até converter **e** estar entre 1 e 24.
 3. Após as duas leituras, aplique a regra: recargas de R$ 50,00 ou mais ganham 10% de bônus em créditos. Calcule o crédito final.
 4. Exiba o resumo com valor pago, bônus (se houver) e crédito final, tudo com `ToString("C")` e o bônus como Sim/Não usando ternário.
 

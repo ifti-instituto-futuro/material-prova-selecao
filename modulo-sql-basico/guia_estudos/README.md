@@ -73,7 +73,7 @@ Execute os scripts na ordem abaixo, no SQL Server Management Studio (SSMS):
     *   DML: `INSERT`, `UPDATE`, `DELETE`.
     *   `SELECT`, `WHERE`, `ORDER BY`, `DISTINCT`, `TOP`, `LIKE`, `BETWEEN`, `IN`.
     *   Funções de agregação, `GROUP BY` e `HAVING`.
-    *   JOINs (`INNER`, `LEFT`, `RIGHT`) e subqueries.
+    *   JOINs (`INNER`, `LEFT`, `RIGHT`).
     *   _Estudo de Caso: relatório de bilheteria e análise de clientes da CineVista._
 
 Após concluir a leitura, resolva a lista de exercícios em [../exercicios/aula1-exercicios.md](../exercicios/aula1-exercicios.md).

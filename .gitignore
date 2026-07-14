@@ -1,0 +1,6 @@
+# Arquivos de sistema do macOS
+.DS_Store
+
+# Provas de uso restrito — mantidas apenas localmente, NÃO versionar
+modulo-csharp-basico/prova-csharp-basico.md
+modulo-csharp-basico/prova-recuperacao-csharp-basico.md

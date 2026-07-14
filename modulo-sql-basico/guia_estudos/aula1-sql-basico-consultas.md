@@ -50,6 +50,8 @@ GO
 
 A chave estrangeira (FK) garante a integridade: o banco recusa uma sessão cujo `IdFilme` não exista na tabela `Filme`.
 
+> **Ordem de criação importa.** Uma tabela com `FOREIGN KEY` depende da tabela referenciada **já existir**. No exemplo acima, `Sessao` aponta para `Filme` e `Sala` — logo, `Filme` e `Sala` precisam ser criadas **antes** de `Sessao`. A regra geral: crie primeiro as tabelas **independentes** e, só depois, as **dependentes**. (Por isso o script `criar_banco.sql` segue exatamente essa ordem.) Tentar criar a tabela dependente primeiro faz o banco recusar a FK, pois a tabela referenciada ainda não existe.
+
 Para evoluir ou remover estruturas existentes:
 
 ```sql
@@ -212,31 +214,11 @@ SELECT	fi.Titulo as TituloFilme
 	WHERE se.Id IS NULL;
 ```
 
-### 1.7. Subqueries (Subconsultas)
+### 1.7. Subqueries — tema do próximo módulo
 
-Uma subquery é um `SELECT` dentro de outro comando. Os dois usos mais comuns:
+Uma **subquery** (subconsulta) é um `SELECT` dentro de outro comando — usada, por exemplo, para filtros de existência ("quem **não** tem") e comparações com valores agregados ("acima da média"). Esse assunto **não faz parte deste módulo básico**: ele será estudado no módulo de **SQL Programação**, depois que os fundamentos de `SELECT`, `WHERE`, `ORDER BY`, `JOIN`, agregações e relacionamentos estiverem bem firmes. Introduzi-lo cedo demais só aumenta a complexidade antes da hora.
 
-```sql
--- 1) Com IN / NOT IN: filtra por uma lista produzida por outra consulta
-SELECT	cl.Nome as NomeCliente
-	FROM [dbo].[Cliente] AS cl WITH(NOLOCK)
-	WHERE cl.Id NOT IN	(
-							SELECT	ig.IdCliente as IdCliente
-								FROM [dbo].[Ingresso] AS ig WITH(NOLOCK)
-						);
-
--- 2) Escalar: compara cada linha com um valor unico calculado
-SELECT	se.Id as IdSessao,
-		se.DataHora as DataHora,
-		se.PrecoIngresso as PrecoIngresso
-	FROM [dbo].[Sessao] AS se WITH(NOLOCK)
-	WHERE se.PrecoIngresso > (
-								SELECT	AVG(se.PrecoIngresso) as PrecoMedio
-									FROM [dbo].[Sessao] AS se WITH(NOLOCK)
-							 );
-```
-
-Quando a mesma pergunta puder ser respondida com `JOIN` ou com subquery, prefira a forma mais legível para o caso — em geral, `JOIN` para cruzar colunas de ambas as tabelas e subquery para filtros de existência ou comparação com valores agregados.
+Por ora, guarde uma ideia útil: perguntas do tipo "quem **não** tem" já são respondidas com o padrão **`LEFT JOIN ... WHERE ... IS NULL`** da seção 1.6 — sem precisar de subquery.
 
 ---
 
@@ -269,7 +251,7 @@ SELECT	fi.Titulo as TituloFilme,
 
 ### Caso B: Clientes Inativos e Sessões Premium
 
-O marketing precisa de duas listas: clientes cadastrados que nunca compraram ingresso (para uma campanha de reativação) e sessões com preço acima da média da rede (para avaliar a política de preços):
+O marketing precisa de duas listas: clientes cadastrados que nunca compraram ingresso (para uma campanha de reativação) e as sessões de maior preço da rede (para avaliar a política de preços):
 
 ```sql
 -- Lista 1: clientes que nunca compraram (LEFT JOIN sem correspondencia)
@@ -281,33 +263,29 @@ SELECT	cl.Nome as NomeCliente,
 			ON ig.IdCliente = cl.Id
 	WHERE ig.Id IS NULL;
 
--- Lista 2: sessoes com preco acima da media geral (subquery escalar)
-SELECT	fi.Titulo as TituloFilme,
-		se.DataHora as DataHora,
-		se.PrecoIngresso as PrecoIngresso
+-- Lista 2: as 5 sessoes mais caras da rede (ranking com TOP + ORDER BY)
+SELECT	TOP 5 fi.Titulo as TituloFilme,
+			  se.DataHora as DataHora,
+			  se.PrecoIngresso as PrecoIngresso
 	FROM [dbo].[Sessao] AS se WITH(NOLOCK)
 		INNER JOIN [dbo].[Filme] AS fi WITH(NOLOCK)
 			ON se.IdFilme = fi.Id
-	WHERE se.PrecoIngresso > (
-								SELECT	AVG(se.PrecoIngresso) as PrecoMedio
-									FROM [dbo].[Sessao] AS se WITH(NOLOCK)
-							 )
 	ORDER BY se.PrecoIngresso DESC;
 ```
 
-**Vantagem desse padrão:** o `LEFT JOIN ... IS NULL` e a subquery escalar respondem perguntas de "ausência" e de "comparação com o todo" — duas categorias de análise que aparecem o tempo inteiro em relatórios corporativos.
+**Vantagem desse padrão:** o `LEFT JOIN ... IS NULL` responde perguntas de "ausência" ("quem nunca comprou"), e o `TOP N` com `ORDER BY` entrega um **ranking** (as N maiores ou menores) — duas análises que aparecem o tempo inteiro em relatórios corporativos, sem exigir subquery.
 
 ---
 
 ## 3. Desafio da Semana
 
-A gerência da CineVista pediu um painel mensal com indicadores da rede. Monte um único script que responda aos itens abaixo.
+A gerência da CineVista pediu um painel mensal com indicadores da rede. Monte um único script que responda aos itens abaixo. Cada item indica a categoria de comando — **DDL**, **DML** ou **DQL** — que você deverá empregar; escolha os comandos, cláusulas e funções adequados.
 
 ### Requisitos:
-1.  **Ocupação por sala:** para cada sala, exiba o nome, a capacidade e o total de ingressos vendidos (todas as sessões somadas), ordenando da sala mais movimentada para a menos movimentada.
-2.  **Gêneros de destaque:** liste os gêneros de filme com mais de 5 ingressos vendidos no total, exibindo o gênero e a quantidade (use `GROUP BY` e `HAVING`).
-3.  **Novidade em cartaz:** cadastre um novo filme de sua escolha e, em seguida, crie uma sessão para ele na `Sala 3`, respeitando as chaves estrangeiras (o filme e a sala precisam existir antes da sessão).
-4.  **Reajuste premium:** aplique um aumento de 10% no `PrecoIngresso` de todas as sessões realizadas na sala do tipo `IMAX` (use `UPDATE` com `WHERE` baseado em subquery ou `JOIN`).
+1.  **Ocupação por sala:** para cada sala, exiba o nome, a capacidade e o total de ingressos vendidos (todas as sessões somadas), ordenando da sala mais movimentada para a menos movimentada. **(DQL)**
+2.  **Gêneros de destaque:** liste os gêneros de filme com mais de 5 ingressos vendidos no total, exibindo o gênero e a quantidade. **(DQL)**
+3.  **Novidade em cartaz:** cadastre um novo filme de sua escolha e, em seguida, crie uma sessão para ele na `Sala 3` — lembre-se de que o filme e a sala precisam existir antes da sessão. **(DML)**
+4.  **Reajuste premium:** aplique um aumento de 10% no `PrecoIngresso` de todas as sessões realizadas em salas do tipo `IMAX`. **(DML)**
 
 ### Estrutura para Desenvolvimento:
 ```sql
@@ -320,12 +298,12 @@ GO
 -- 2. Generos de destaque
 -- Insira sua consulta aqui!
 
--- 3. Novidade em cartaz (INSERT de Filme e depois de Sessao)
+-- 3. Novidade em cartaz
 -- Insira seus comandos aqui!
 
--- 4. Reajuste premium (UPDATE com WHERE)
+-- 4. Reajuste premium
 -- Insira seu comando aqui!
 ```
 
 ---
-*Dica: antes de executar o UPDATE do item 4, rode um SELECT com o mesmo filtro para conferir quais sessões serão reajustadas — esse é o hábito que separa um iniciante de um profissional cuidadoso.*
+*Dica: antes de aplicar a alteração do item 4, rode uma consulta com o mesmo filtro para conferir quais sessões serão reajustadas — esse é o hábito que separa um iniciante de um profissional cuidadoso.*
