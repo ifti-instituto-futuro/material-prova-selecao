@@ -39,7 +39,7 @@ Com a identidade configurada, o ciclo do dia a dia é preparar (`add`) e registr
 git add Agenda.cs           # prepara um arquivo especifico
 git add .                   # prepara todas as alteracoes da pasta
 
-git commit -m "feature/nome-da-funcionalidade: Adiciona validacao de horario na agenda"
+git commit -m "feat/nome-da-funcionalidade: Adiciona validacao de horario na agenda"
 
 git log                     # historico completo
 git log --oneline           # historico resumido (1 linha por commit)
@@ -48,7 +48,22 @@ git diff                    # o que mudou e ainda nao foi preparado
 
 Boas mensagens de commit são curtas, no imperativo e descrevem **o que** a mudança faz: "Adiciona filtro por profissional", "Corrige cálculo de duração da consulta".
 
-### 1.3. Repositórios Remotos
+### 1.3. Revertendo um commit com segurança
+
+Quando uma alteração inadequada já foi registrada em um commit — especialmente se ela já foi compartilhada com o time — use `git revert`. Em vez de apagar ou reescrever a história, ele cria **um novo commit** que desfaz as alterações introduzidas pelo commit escolhido.
+
+```bash
+git log --oneline              # localiza o identificador do commit a reverter
+git revert <hash-do-commit>    # cria o commit que desfaz aquela alteração
+git status                     # confere o estado atual do repositorio
+git log --oneline              # confirma o commit original e o commit de reversao
+```
+
+Se a reversão encontrar um conflito, resolva o arquivo seguindo o mesmo processo de uma integração: escolha o conteúdo final, remova os marcadores e conclua o commit de reversão.
+
+> **`revert` não é `reset`.** `git revert` preserva o commit original no histórico e adiciona outro commit que o compensa; por isso é a escolha segura para alterações que já foram compartilhadas. `git reset` move o ponteiro da branch e pode descartar commits locais. No fluxo SMN, a recriação da `staging` a partir da `main` é uma decisão de ambiente e não substitui a reversão de um commit compartilhado.
+
+### 1.4. Repositórios Remotos
 
 O repositório remoto (em geral no GitHub/GitLab/Azure DevOps) é o ponto de encontro do time. Por convenção, ele recebe o apelido `origin`.
 
@@ -60,18 +75,38 @@ git fetch                         # apenas baixa as novidades, sem integrar
 
 Diferença importante: `git pull` = `git fetch` + merge automático. O `fetch` é útil quando você quer inspecionar o que chegou antes de integrar.
 
-### 1.4. Branches e Merge
+#### Publicação forçada: `--force` exige cuidado
+
+`git push --force` faz o remoto apontar para a história local da sua branch, mesmo quando os históricos divergem. Isso pode ser necessário depois de reescrever **uma branch exclusivamente sua** com `rebase`, `commit --amend` ou `reset`, mas também pode fazer commits de colegas deixarem de aparecer na referência remota da branch.
+
+```bash
+git fetch origin
+git log --oneline origin/feat/minha-tarefa  # confere o estado remoto conhecido
+git push --force-with-lease origin feat/minha-tarefa
+```
+
+Prefira `git push --force-with-lease` em vez de `git push --force`. A opção `--force-with-lease` recusa a publicação se a referência remota mudou desde a última informação local conhecida; assim, evita sobrescrever por engano o trabalho que chegou de outra pessoa.
+
+**Regras de segurança:**
+
+1. Nunca use publicação forçada em `main`, `staging` ou em uma branch compartilhada pelo time.
+2. Use-a somente em uma `feat/*` que seja sua e depois de confirmar que a reescrita do histórico é realmente necessária.
+3. Antes de publicar, execute `git fetch origin` e compare a branch remota com `git log`.
+4. Avise as pessoas que trabalham na mesma branch. Se alguém já publicou nela, pare e alinhe o procedimento antes de forçar.
+5. Para desfazer um commit que já foi compartilhado, prefira `git revert`: publicação forçada não é uma forma segura de correção coletiva.
+
+### 1.5. Branches e Merge
 
 Uma **branch** é uma linha de desenvolvimento independente. Ela permite trabalhar em uma funcionalidade sem afetar o código principal.
 
 ```bash
 git branch                           # lista as branches locais
-git checkout -b feature/nova-tela    # cria uma branch e ja muda para ela
+git checkout -b feat/nova-tela       # cria uma branch e ja muda para ela
 git switch main ou git checkout main # alterna para outra branch existente
-git merge feature/nova-tela          # integra a branch indicada na branch atual
+git merge feat/nova-tela             # integra a branch indicada na branch atual
 ```
 
-> **Convenção de nomes de branch.** Use sempre **letras minúsculas** e **kebab-case** (palavras separadas por hífen), sem espaços nem acentos: `feature/cadastro-de-clientes`, e nunca `Feature/Cadastro Clientes` ou `nova branch`. Neste material adotamos o prefixo `feature/`, que é o mais comum no mercado. **Na prática da SMN, porém, a convenção é `feat/`** (ex.: `feat/cadastro-de-clientes`) — ao trabalhar nos repositórios da empresa, troque `feature/` por `feat/`. O essencial é o time inteiro seguir **um** padrão de forma consistente.
+> **Convenção de nomes de branch.** Use sempre **letras minúsculas** e **kebab-case** (palavras separadas por hífen), sem espaços nem acentos: `feat/cadastro-de-clientes`, e nunca `Feat/Cadastro Clientes` ou `nova branch`. No fluxo SMN, o prefixo obrigatório é `feat/`. O essencial é o time inteiro seguir **um** padrão de forma consistente.
 
 Sobre o `merge`:
 
@@ -80,16 +115,22 @@ Sobre o `merge`:
 *   **Conflito:** quando a mesma linha foi alterada nas duas branches, o Git pausa e marca o arquivo:
 
 ```text
-<<<<<<< HEAD
+ <<<<<<< HEAD
 duracaoConsulta = 30;
-=======
+ =======
 duracaoConsulta = 45;
->>>>>>> feature/ajuste-duracao
+ >>>>>>> feat/ajuste-duracao
 ```
 
 Para resolver: edite o arquivo escolhendo (ou combinando) o conteúdo correto, remova os marcadores, depois `git add` no arquivo e `git commit` para concluir o merge.
 
-### 1.5. O Fluxo Git SMN
+#### Ramificação auxiliar em atividades de aprendizagem
+
+Uma atividade pode pedir uma ramificação temporária para praticar integração sem alterar a `main`. Nesse caso, trate-a como uma ramificação **auxiliar de avaliação**, identificada por `atividade/`, e não como uma `feat/*` do fluxo SMN. Ela pode nascer da branch de entrega, receber uma alteração própria, ser integrada de volta nessa mesma branch e ser excluída em seguida. Ela não segue para `staging` nem para `main`.
+
+Para que o histórico evidencie uma integração real, a branch de entrega e a ramificação auxiliar devem receber um commit cada depois da bifurcação. Assim, o merge une duas linhas de desenvolvimento em vez de apenas avançar o ponteiro da branch.
+
+### 1.6. O Fluxo Git SMN
 
 O Gitflow da SMN prioriza a simplicidade e o conceito de **promoção de funcionalidades**: a feature nasce da `main`, é validada em `staging` e, aprovada, é promovida à `main`.
 
@@ -97,7 +138,7 @@ O Gitflow da SMN prioriza a simplicidade e o conceito de **promoção de funcion
 | :--- | :--- | :--- |
 | `main` | Produção. Contém exclusivamente código estável, testado e aprovado. | Protegida — alterações somente via Pull Request. |
 | `staging` | Homologação. Integra funcionalidades para validação antes da produção. | Volátil — sujeita a instabilidades e resets periódicos. |
-| `feature/*` | Desenvolvimento de tarefas específicas. | Temporária — excluída após a conclusão da tarefa. |
+| `feat/*` | Desenvolvimento de tarefas específicas. | Temporária — excluída após a conclusão da tarefa. |
 
 O ciclo de vida em 3 fases:
 
@@ -106,20 +147,20 @@ O ciclo de vida em 3 fases:
 ```bash
 git checkout main
 git pull
-git checkout -b feature/nome-da-funcionalidade
+git checkout -b feat/nome-da-funcionalidade
 # ... codifica e commita ...
-git push origin feature/nome-da-funcionalidade
+git push origin feat/nome-da-funcionalidade
 ```
 
-**Fase 2 — Staging (homologação):** merge da `feature` na `staging` (dispara o deploy no ambiente de testes). QA e Produto validam. Se houver falhas, as correções são feitas **na feature** e integradas novamente em `staging`.
+**Fase 2 — Staging (homologação):** merge da `feat` na `staging` (dispara o deploy no ambiente de testes). QA e Produto validam. Se houver falhas, as correções são feitas **na feat** e integradas novamente em `staging`.
 
-**Fase 3 — Main (produção):** aberto um Pull Request da `feature` para a `main`; após o code review e a aprovação, o merge dispara a implantação em produção e a branch de feature é excluída.
+**Fase 3 — Main (produção):** aberto um Pull Request da `feat` para a `main`; após o code review e a aprovação, o merge dispara a implantação em produção e a branch `feat` é excluída.
 
 > **Diretriz Crítica:** é estritamente **vedado** realizar merge da branch `staging` para a `main`. O ambiente de staging é experimental e pode conter código instável ou reprovado. A promoção para produção acontece sempre da `feature` para a `main`.
 
 Papel estratégico da `staging`: ela é a barreira de segurança do processo. Aceita múltiplos merges para testes rápidos e, se acumular divergências ou instabilidade, é **recriada a partir da `main`** (reset), restaurando a integridade do ambiente de testes.
 
-### 1.6. Gitflow Tradicional vs. Gitflow SMN
+### 1.7. Gitflow Tradicional vs. Gitflow SMN
 
 **Gitflow Tradicional:** Feature → Develop → Release → Main (+ Hotfix).
 **Gitflow SMN:** Feature → Staging (validação) → Main.

@@ -128,6 +128,14 @@ SELECT	cl.Nome as NomeCliente
 	WHERE cl.Email IS NOT NULL;
 ```
 
+No `LIKE`, o curinga `%` representa qualquer sequência de caracteres, inclusive nenhuma. Escolha a posição do `%` de acordo com a pergunta do enunciado:
+
+```sql
+WHERE li.Titulo LIKE '%dados%'  -- contém "dados"
+WHERE li.Titulo LIKE 'dados%'   -- começa com "dados"
+WHERE li.Titulo LIKE '%dados'   -- termina com "dados"
+```
+
 > **Alinhamento dos campos:** os campos da lista do `SELECT` ficam sempre alinhados entre si, um embaixo do outro. Quando houver `TOP N` ou `DISTINCT`, o campo da linha seguinte alinha com o **campo** da linha de cima — e não com o `TOP N` ou `DISTINCT` (repare no exemplo do `TOP 3` acima: `fi.DuracaoMinutos` está alinhado com `fi.Titulo`).
 
 Os **aliases** seguem um padrão fixo no módulo, por boas práticas:

@@ -20,7 +20,7 @@ O conteúdo está organizado em cinco aulas, cada uma com guia teórico, estudo 
 
 2. **Aula 2: Entrada de Dados, Conversões e Relatórios no Console**
    - `Console.ReadLine` e o padrão pergunta/resposta no console.
-   - `TryParse` para `int`, `decimal` e `bool`; conversão de textos com ponto decimal (`CultureInfo.InvariantCulture`).
+   - `TryParse` para `int`, `decimal` e `bool`; normalização de `sim/nao` para booleano; conversão de textos com ponto decimal (`CultureInfo.InvariantCulture`).
    - Validação de entradas em loop (`while`).
    - Relatórios em seções, `ToString("C")`/`("N2")` e ternário Sim/Não.
 

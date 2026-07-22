@@ -8,12 +8,14 @@ Este guia consolida o conteúdo estudado na aula única do módulo, simulando o 
 
 ## Estrutura dos Exercícios
 
-A aula possui 3 exercícios organizados de forma incremental:
+A aula possui 5 exercícios organizados de forma incremental:
 
 *   **[Aula 1: Git Essencial e o Fluxo Git SMN](aula1-exercicios.md)**
     *   Exercício 1: configuração, `init`, `status`, `add`, `commit`, `diff` e `log`.
-    *   Exercício 2: branches de feature, alternância de branches e resolução de conflito.
-    *   Exercício 3: o ciclo completo do fluxo Git SMN (Development, Staging e Main).
+    *   Exercício 2: reversão segura de um commit com `git revert`.
+    *   Exercício 3: branches de feature, alternância de branches e resolução de conflito.
+    *   Exercício 4: o ciclo completo do fluxo Git SMN (Development, Staging e Main).
+    *   Exercício 5: publicação forçada controlada com `--force-with-lease`.
 
 ---
 

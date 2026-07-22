@@ -51,9 +51,30 @@ if (bool.TryParse(cupomTexto, out bool possuiCupom))
 
 O padrão profissional é sempre o mesmo: **tentou converter, verificou o resultado, tratou o erro com mensagem amigável** — o programa nunca deve quebrar por causa de uma entrada errada.
 
-> **Estes exemplos com `if` são o primeiro passo.** Aqui a conversão é testada **uma vez** e, se falhar, apenas avisamos o erro. Na prática — e nas provas — quase sempre queremos **repetir a pergunta até o usuário digitar um valor válido**: isso troca o `if` por um `while`, mostrado na seção **1.4** logo abaixo. Guarde o padrão `while` + `TryParse`: é ele que aparece nos Casos A/B desta aula e nas questões interativas.
+> **Estes exemplos com `if` são o primeiro passo.** Aqui a conversão é testada **uma vez** e, se falhar, apenas avisamos o erro. Na prática — e nas provas — quase sempre queremos **repetir a pergunta até o usuário digitar um valor válido**: isso troca o `if` por um `while`, mostrado na seção **1.5** logo abaixo. Guarde o padrão `while` + `TryParse`: é ele que aparece nos Casos A/B desta aula e nas questões interativas.
 
-### 1.3. Ponto ou Vírgula? Convertendo Textos com Ponto Decimal
+### 1.3. Normalizando `sim` e `nao` para `bool`
+
+Interfaces em português costumam receber respostas como `sim` e `nao`. Esses textos não são aceitos por `bool.TryParse`, que trabalha apenas com `true` e `false`. Quando o contrato da tela pede `sim/nao`, primeiro normalize o texto, valide as duas respostas possíveis e só então converta para `bool`.
+
+```csharp
+Console.Write("Cliente VIP? (sim/nao): ");
+string vipTexto = (Console.ReadLine() ?? "").Trim().ToLowerInvariant();
+
+if (vipTexto == "sim" || vipTexto == "nao")
+{
+    bool clienteVip = vipTexto == "sim" ? true : false;
+    Console.WriteLine($"Cliente VIP: {clienteVip}");
+}
+else
+{
+    Console.WriteLine("Resposta invalida: digite sim ou nao.");
+}
+```
+
+O operador ternário segue o formato `condicao ? valorSeVerdadeiro : valorSeFalso`. No exemplo, `sim` vira `true` e `nao` vira `false`. Use esse padrão quando a interface define o vocabulário `sim/nao`; use `bool.TryParse` quando a entrada contratada for `true/false`.
+
+### 1.4. Ponto ou Vírgula? Convertendo Textos com Ponto Decimal
 
 Nem todo dado chega digitado pelo usuário. Quando um valor vem de **outro sistema** (aplicativo, formulário web, arquivo), ele costuma usar **ponto** como separador decimal: `"450.00"`. E aqui mora uma armadilha grave: no formato brasileiro, o ponto é separador de **milhar** — então a conversão comum não falha, ela devolve o **valor errado**:
 
@@ -81,7 +102,7 @@ Regra prática do módulo:
 | Usuário digitando no console (Brasil) | vírgula (`12,50`) | `decimal.TryParse(texto, out valor)` |
 | Dado vindo do sistema/app (`"450.00"`) | ponto (`450.00`) | `decimal.TryParse(texto, NumberStyles.Number, CultureInfo.InvariantCulture, out valor)` |
 
-### 1.4. Repetindo Até a Entrada Ser Válida
+### 1.5. Repetindo Até a Entrada Ser Válida
 
 Se a entrada for inválida, muitas vezes não basta mostrar o erro: é preciso **perguntar de novo**. O laço `while` da Aula 1 resolve isso — repetimos a leitura *enquanto* a entrada não for aceita:
 
@@ -103,7 +124,7 @@ Console.WriteLine($"Recarga aceita: {valorRecarga.ToString("C")}");
 
 Repare que a validação testa **duas coisas de uma vez** com `&&`: a conversão funcionou **e** a regra de negócio (valor mínimo) foi atendida.
 
-### 1.5. Relatórios Formatados em Seções
+### 1.6. Relatórios Formatados em Seções
 
 Os sistemas da PedalUrbano (e as provas deste módulo!) exibem resultados em **seções com título**, valores monetários formatados e respostas Sim/Não. Os ingredientes:
 

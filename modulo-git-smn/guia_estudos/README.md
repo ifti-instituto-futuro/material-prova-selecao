@@ -8,7 +8,7 @@ Bem-vindo ao guia de estudos do módulo de Git. Todo o material prático utiliza
 flowchart LR
     MAIN[main - producao, protegida]
     STAGING[staging - homologacao, volatil]
-    FEATURE[feature/* - temporaria]
+    FEATURE[feat/* - temporaria]
 
     MAIN -- "base de toda feature" --> FEATURE
     FEATURE -- "merge para validacao (QA)" --> STAGING
@@ -22,7 +22,7 @@ Observação importante: **não existe** seta de `staging` para `main` — esse 
 
 1. `main` é a produção: protegida, recebe alterações somente via Pull Request aprovado.
 2. `staging` é a homologação: volátil, pode ficar instável e ser recriada a partir da `main` a qualquer momento.
-3. `feature/*` é temporária: nasce sempre da `main` atualizada e é excluída após a entrega.
+3. `feat/*` é temporária: nasce sempre da `main` atualizada e é excluída após a entrega.
 4. Correções de problemas encontrados na homologação são feitas **na feature**, nunca diretamente na `staging`.
 5. É **vedado** o merge de `staging` para `main`.
 
@@ -31,9 +31,11 @@ Observação importante: **não existe** seta de `staging` para `main` — esse 
 *   **[Aula 1: Git Essencial e o Fluxo Git SMN](aula1-git-e-fluxo-smn.md)**
     *   O que é versionamento; `init`, `clone` e `status`.
     *   O ciclo `add`, `commit`, `log` e `diff`.
+    *   Reversão segura de commits com `git revert` e diferença em relação a `reset`.
     *   Remotos: `origin`, `push`, `pull` e `fetch`.
+    *   Publicação forçada: riscos de `--force` e proteção de `--force-with-lease`.
     *   Branches, `merge`, fast-forward e resolução de conflitos.
-    *   O fluxo Git SMN: `main`, `staging` e `feature/*` nas 3 fases.
+    *   O fluxo Git SMN: `main`, `staging` e `feat/*` nas 3 fases.
     *   Comparativo Gitflow tradicional vs. Gitflow SMN.
     *   _Estudo de Caso: o ciclo completo da feature "lembrete por e-mail" do AgendaFácil._
 

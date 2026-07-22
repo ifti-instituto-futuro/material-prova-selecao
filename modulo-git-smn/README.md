@@ -11,16 +11,18 @@ O conteúdo está organizado em uma aula única, com guia teórico, estudo de ca
 1. **Aula 1: Git Essencial e o Fluxo Git SMN**
    - Fundamentos: repositório, working directory, staging area e commits.
    - Ciclo básico: `init`, `status`, `add`, `commit`, `diff` e `log`.
+   - Correção segura de histórico compartilhado com `git revert`.
    - Remotos: `origin`, `push`, `pull` e `fetch`.
+   - Publicação forçada: riscos de `--force` e uso preferencial de `--force-with-lease`.
    - Branches, merge (fast-forward e merge commit) e resolução de conflitos.
-   - O fluxo Git SMN: branches `main`, `staging` e `feature/*` e o ciclo Development, Staging e Main.
+   - O fluxo Git SMN: branches `main`, `staging` e `feat/*` e o ciclo Development, Staging e Main.
    - Comparativo: Gitflow tradicional vs. Gitflow SMN.
 
 ## Padrões e Convenções (Guidelines)
 
 Este módulo segue as regras do Gitflow SMN:
 
-- Branches de trabalho nomeadas no padrão `feature/nome-da-funcionalidade`.
+- Branches de trabalho nomeadas no padrão `feat/nome-da-funcionalidade`.
 - Mensagens de commit curtas, no imperativo, descrevendo o que a mudança faz.
 - `main` é protegida: alterações somente via Pull Request aprovado.
 - É **vedado** o merge de `staging` para `main`.

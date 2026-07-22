@@ -20,7 +20,22 @@ Nesta lista de exercícios, você praticará o ciclo básico do Git, o trabalho 
 
 ---
 
-## Exercício 2: Feature Branch na Prática
+## Exercício 2: Revertendo uma Alteração Publicada
+
+### Cenário:
+Uma alteração inadequada foi incluída em um commit do AgendaFácil e já faz parte do histórico compartilhado. O time precisa desfazer somente essa mudança, preservando os demais commits e a rastreabilidade do que ocorreu.
+
+### Requisitos:
+1. Em um repositório de treino, crie `lembretes.md` e faça um commit inicial com uma configuração válida de lembretes.
+2. Adicione ao mesmo arquivo uma regra inadequada e registre-a em um segundo commit.
+3. Use o histórico para identificar o commit que contém apenas a regra inadequada.
+4. Desfaça esse commit com `git revert`.
+5. Confira que a regra inadequada não aparece mais no arquivo e que o histórico mantém o commit original mais um novo commit de reversão.
+6. Explique por que, nesse cenário compartilhado, `git revert` é mais adequado que `git reset`.
+
+---
+
+## Exercício 3: Feature Branch na Prática
 
 ### Cenário:
 Você recebeu sua primeira tarefa da sprint: iniciar o "cadastro de cliente" do AgendaFácil. O trabalho deve ser feito em uma branch de feature, como manda o fluxo do time — e, no meio do caminho, você enfrentará seu primeiro conflito de merge.
@@ -32,10 +47,11 @@ Você recebeu sua primeira tarefa da sprint: iniciar o "cadastro de cliente" do 
 4. Provoque um conflito controlado: na `main`, crie um commit alterando a **primeira linha** de um arquivo que também exista na feature (crie o arquivo nas duas branches, com conteúdos diferentes na mesma linha); em seguida, faça o merge da feature na `main`.
 5. Resolva o conflito: abra o arquivo, escolha o conteúdo final, remova os marcadores de conflito, finalize com `git add` e `git commit`.
 6. Explique com suas palavras o que significam os marcadores `<<<<<<<`, `=======` e `>>>>>>>` que o Git inseriu no arquivo.
+7. Para praticar uma integração entre duas linhas de trabalho, crie a ramificação auxiliar `atividade/cadastro-cliente-complemento` a partir da feature. Faça um commit na ramificação auxiliar e outro na feature depois da bifurcação; integre a ramificação auxiliar na feature e exclua-a. Explique por que ela não deve seguir para `staging` ou `main`.
 
 ---
 
-## Exercício 3: Promovendo Código no Fluxo SMN
+## Exercício 4: Promovendo Código no Fluxo SMN
 
 ### Cenário:
 Sua feature foi aprovada pelo time e agora precisa percorrer o caminho oficial até a produção, seguindo o manual do Gitflow SMN. Além de executar os comandos, você deverá demonstrar que entende as regras do fluxo.
@@ -58,6 +74,19 @@ Sua feature foi aprovada pelo time e agora precisa percorrer o caminho oficial a
    git checkout main
    git merge staging
    ```
+
+---
+## Exercício 5: Publicação Forçada Controlada
+
+### Cenário:
+Em uma `feat/*` exclusivamente sua e ainda não aprovada, você ajustou um commit local com `git commit --amend`. Como o identificador do commit mudou, a publicação normal pode ser recusada pelo remoto. O objetivo não é usar força indiscriminadamente, mas decidir quando ela é aceitável e aplicar a proteção disponível.
+
+### Requisitos:
+1. Explique por que uma publicação forçada pode fazer commits de outras pessoas deixarem de aparecer na branch remota.
+2. Liste as três verificações anteriores à publicação: atualizar as referências remotas, inspecionar o histórico remoto e confirmar que a branch é exclusivamente sua.
+3. Escreva o comando recomendado para publicar a sua `feat/ajuste-lembretes` reescrita, usando a proteção de lease.
+4. Explique o que deve acontecer se a proteção indicar que alguém publicou uma alteração nova na mesma branch: não force; pare e alinhe o trabalho com a pessoa.
+5. Diga por que esse procedimento é proibido em `main` e `staging`, e por que `git revert` continua sendo a escolha para corrigir um commit compartilhado.
 
 ---
 *Dica: no exercício 3, lembre-se das duas regras de ouro do fluxo: de onde a feature nasce e de onde a produção recebe código.*

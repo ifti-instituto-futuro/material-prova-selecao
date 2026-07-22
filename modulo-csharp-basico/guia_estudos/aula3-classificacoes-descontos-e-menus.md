@@ -126,7 +126,7 @@ else
 
 Com a escolha validada, a decisão final é um `switch` — exatamente como na Aula 1.
 
-> **Em um menu de verdade, envolva a leitura em um `while`.** O exemplo acima valida a opção **uma vez** (com `if`) para focar no `Enum.IsDefined`. Num menu real — e no Desafio desta aula — a leitura fica dentro de um laço que **repete a pergunta até vir uma opção válida**, exatamente como o padrão `while` + `TryParse` da Aula 2 (seção 1.4):
+> **Em um menu de verdade, envolva a leitura em um `while`.** O exemplo acima valida a opção **uma vez** (com `if`) para focar no `Enum.IsDefined`. Num menu real — e no Desafio desta aula — a leitura fica dentro de um laço que **repete a pergunta até vir uma opção válida**, exatamente como o padrão `while` + `TryParse` da Aula 2 (seção 1.5):
 >
 > ```csharp
 > int opcao;
