@@ -115,11 +115,11 @@ Sobre o `merge`:
 *   **Conflito:** quando a mesma linha foi alterada nas duas branches, o Git pausa e marca o arquivo:
 
 ```text
- <<<<<<< HEAD
+<<<<<<< HEAD
 duracaoConsulta = 30;
- =======
+=======
 duracaoConsulta = 45;
- >>>>>>> feat/ajuste-duracao
+>>>>>>> feat/ajuste-duracao
 ```
 
 Para resolver: edite o arquivo escolhendo (ou combinando) o conteúdo correto, remova os marcadores, depois `git add` no arquivo e `git commit` para concluir o merge.
@@ -156,7 +156,7 @@ git push origin feat/nome-da-funcionalidade
 
 **Fase 3 — Main (produção):** aberto um Pull Request da `feat` para a `main`; após o code review e a aprovação, o merge dispara a implantação em produção e a branch `feat` é excluída.
 
-> **Diretriz Crítica:** é estritamente **vedado** realizar merge da branch `staging` para a `main`. O ambiente de staging é experimental e pode conter código instável ou reprovado. A promoção para produção acontece sempre da `feature` para a `main`.
+> **Diretriz Crítica:** é estritamente **vedado** realizar merge da branch `staging` para a `main`. O ambiente de staging é experimental e pode conter código instável ou reprovado. A promoção para produção acontece sempre da `feat/*` para a `main`.
 
 Papel estratégico da `staging`: ela é a barreira de segurança do processo. Aceita múltiplos merges para testes rápidos e, se acumular divergências ou instabilidade, é **recriada a partir da `main`** (reset), restaurando a integridade do ambiente de testes.
 
@@ -170,7 +170,7 @@ Papel estratégico da `staging`: ela é a barreira de segurança do processo. Ac
 | **Integração** | Usa `develop` como branch perene. | Inexistente — a base é sempre a `main`. |
 | **Implantação** | Processo complexo com branches de release e tags. | Simplificado — merge na `main` resulta em deploy. |
 | **Staging** | Não é mandatório na definição padrão. | Fundamental — atua como garantia de qualidade. |
-| **Correção de bugs** | Hotfixes complexos direto na produção. | Correções feitas na `feature`, com agilidade. |
+| **Correção de bugs** | Hotfixes complexos direto na produção. | Correções feitas na `feat/*`, com agilidade. |
 | **Curva de aprendizado** | Elevada, mais propensa a conflitos. | Reduzida — fluxo intuitivo e linear. |
 
 ---

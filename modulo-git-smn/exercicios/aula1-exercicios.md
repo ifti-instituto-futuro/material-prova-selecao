@@ -76,6 +76,7 @@ Sua feature foi aprovada pelo time e agora precisa percorrer o caminho oficial a
    ```
 
 ---
+
 ## Exercício 5: Publicação Forçada Controlada
 
 ### Cenário:
@@ -89,4 +90,4 @@ Em uma `feat/*` exclusivamente sua e ainda não aprovada, você ajustou um commi
 5. Diga por que esse procedimento é proibido em `main` e `staging`, e por que `git revert` continua sendo a escolha para corrigir um commit compartilhado.
 
 ---
-*Dica: no exercício 3, lembre-se das duas regras de ouro do fluxo: de onde a feature nasce e de onde a produção recebe código.*
+*Dica: no exercício 4, lembre-se das duas regras de ouro do fluxo: de onde a feature nasce e de onde a produção recebe código.*
